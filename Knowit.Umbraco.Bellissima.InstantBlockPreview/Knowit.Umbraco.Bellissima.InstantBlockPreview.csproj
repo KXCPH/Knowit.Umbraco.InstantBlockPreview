@@ -16,7 +16,7 @@
 	  <RepositoryUrl>https://github.com/kasparboelkjeldsen/Knowit.Umbraco.InstantBlockPreview</RepositoryUrl>
 	  <RepositoryType>git</RepositoryType>
 	  <SignAssembly>False</SignAssembly>
-	  <Version>3.0.4</Version>
+	  <Version>3.0.7</Version>
 	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
 	  <Configurations>Debug;Release;</Configurations>
 	  <PackageIcon>icon.png</PackageIcon>

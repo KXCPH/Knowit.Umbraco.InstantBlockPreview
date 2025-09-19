@@ -13,7 +13,7 @@ For Umbraco 13 it also allows for preview of blocks in the Rich Text Editor. (Ve
 If you use Umbraco 13 or old, use version 1.x.x
 
 If you use Umbraco 14 use version 2.x.x (due to the rewrite of the backoffice)
-If you use Umbraco 15 use version 3.x.x (due to the rewrite of the blocks in Umbraco)
+If you use Umbraco 15+ use version 3.x.x (due to the rewrite of the blocks in Umbraco)
 
 The two packages "Knowit.Umbraco.InstantBlockPreview" and "Knowit.Umbraco.InstantBlockPreview.Headless" share this repo and readme. 
 
@@ -75,8 +75,8 @@ AreaReplace example:
 </div>
 ```
 
-#### Version 14 specific behavior
-As version 14.1 of Umbraco currently doesn't use the "advanced" tab info from the block setups, and instead lets you override "all" block renderings, I've introduced `enabledFor`and `disableFor` as a way to give that control back. 
+#### Version 14+ specific behavior
+As version 14.1+ of Umbraco currently doesn't use the "advanced" tab info from the block setups, and instead lets you override "all" block renderings, I've introduced `enabledFor`and `disableFor` as a way to give that control back. 
 
 Default behaviour with no configuration is to take control of all block-renderings. If something goes wrong, it will output html like Umbraco normally would without the plugin installed.
 
