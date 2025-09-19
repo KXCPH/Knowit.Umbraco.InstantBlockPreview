@@ -1,5 +1,5 @@
-import { UMB_AUTH_CONTEXT as c } from "@umbraco-cms/backoffice/auth";
-class r {
+import { UMB_AUTH_CONTEXT as r } from "@umbraco-cms/backoffice/auth";
+class c {
   constructor() {
     this._fns = [];
   }
@@ -22,26 +22,26 @@ const s = {
   VERSION: "Latest",
   WITH_CREDENTIALS: !1,
   interceptors: {
-    request: new r(),
-    response: new r()
+    request: new c(),
+    response: new c()
   }
-}, a = async (i, e) => {
-  i.consumeContext(c, async (o) => {
+}, E = async (i, e) => {
+  i.consumeContext(r, async (o) => {
     if (!o) return;
     const n = o.getOpenApiConfiguration();
-    s.BASE = n.base, s.TOKEN = n.token, s.WITH_CREDENTIALS = n.withCredentials, s.CREDENTIALS = n.credentials;
+    s.BASE = n.base, s.TOKEN = await n.token(), s.CREDENTIALS = n.credentials;
   });
   const t = {
     alias: "knowit-instant-block-preview",
     name: "Knowit Instant Block Preview",
     type: "blockEditorCustomView",
     elementName: "knowit-instant-block-preview",
-    js: () => import("./knowit-instant-block-preview-C06YWKED.js")
+    js: () => import("./knowit-instant-block-preview-D1k6F-Dm.js")
   };
   e.register(t);
 };
 export {
   s as O,
-  a as o
+  E as o
 };
-//# sourceMappingURL=index-CZBT1fFq.js.map
+//# sourceMappingURL=index-Dku9YWOy.js.map

@@ -9,12 +9,12 @@
 			<PackageReferenceProjectContentFiles Include="$(PackageReferenceProjectContentFilesPath)" />
 		</ItemGroup>
 		<Message Text="Copying knowit-instantblockpreview files: $(PackageReferenceProjectContentFilesPath) - #@(PackageReferenceProjectContentFiles->Count()) files" Importance="high" />
-		<Copy SourceFiles="@(PackageReferenceProjectContentFiles)" DestinationFiles="@(PackageReferenceProjectContentFiles->'$(MSBuildProjectDirectory)\wwwroot\app_plugins\knowit-instantblockpreview\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+		<Copy SourceFiles="@(PackageReferenceProjectContentFiles)" DestinationFiles="@(PackageReferenceProjectContentFiles->'$(MSBuildProjectDirectory)\wwwroot\App_Plugins\knowit-instantblockpreview\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
 	</Target>
 
 	<Target Name="ClearPackageReferenceProjectAssets" BeforeTargets="Clean">
 		<ItemGroup>
-			<PackageReferenceProjectDir Include="$(MSBuildProjectDirectory)\wwwroot\app_plugins\knowit-instantblockpreview\" />
+			<PackageReferenceProjectDir Include="$(MSBuildProjectDirectory)\wwwroot\App_Plugins\knowit-instantblockpreview\" />
 		</ItemGroup>
 		<Message Text="Clear old knowit-instantblockpreview data" Importance="high" />
 		<RemoveDir Directories="@(PackageReferenceProjectDir)" />

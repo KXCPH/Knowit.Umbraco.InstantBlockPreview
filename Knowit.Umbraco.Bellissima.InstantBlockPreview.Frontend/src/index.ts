@@ -9,10 +9,10 @@ export const onInit: UmbEntryPointOnInit = async (_host, extensionRegistry) => {
         if (!auth) return;
 
         const umbOpenApi = auth.getOpenApiConfiguration();
-        OpenAPI.BASE = umbOpenApi.base;
-        OpenAPI.TOKEN = umbOpenApi.token;
-        OpenAPI.WITH_CREDENTIALS = umbOpenApi.withCredentials;
-        OpenAPI.CREDENTIALS = umbOpenApi.credentials;
+        OpenAPI.BASE = umbOpenApi.base!;
+        OpenAPI.TOKEN = await umbOpenApi.token()!;
+        //OpenAPI.WITH_CREDENTIALS = umbOpenApi.credentials
+        OpenAPI.CREDENTIALS = umbOpenApi.credentials!
     });
   
     const manifestBlockPreview : ManifestElementWithElementName = {

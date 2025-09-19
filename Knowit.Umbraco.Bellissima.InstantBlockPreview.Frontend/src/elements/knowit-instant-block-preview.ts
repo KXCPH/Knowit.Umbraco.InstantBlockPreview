@@ -1,4 +1,5 @@
 ﻿import { html, customElement, unsafeHTML, css, TemplateResult} from "@umbraco-cms/backoffice/external/lit";
+import { styleMap } from "@umbraco-cms/backoffice/external/lit";
 import { UMB_PROPERTY_CONTEXT } from '@umbraco-cms/backoffice/property';
 import { UMB_DOCUMENT_WORKSPACE_CONTEXT } from "@umbraco-cms/backoffice/document";
 import { UmbWorkspaceUniqueType } from "@umbraco-cms/backoffice/workspace";
@@ -7,8 +8,7 @@ import { DocumentTypeService, DataTypeService, DataTypeResponseModel } from "../
 
 import '@umbraco-cms/backoffice/ufm';
 
-import { UMB_BLOCK_ENTRY_CONTEXT, UmbBlockDataType } from "@umbraco-cms/backoffice/block";
-import { observeMultiple } from "@umbraco-cms/backoffice/observable-api";
+import { UMB_BLOCK_ENTRY_CONTEXT, UMB_BLOCK_MANAGER_CONTEXT, UmbBlockDataType } from "@umbraco-cms/backoffice/block";
 import { UmbLitElement } from "@umbraco-cms/backoffice/lit-element";
 import { marryContentAndValue, parseBadKeys } from "../util/block-content-utils";
 
@@ -52,78 +52,75 @@ export class InstantBlockPreview extends UmbLitElement {
     this.#settings = await fetch('/api/blockpreview');
     
     this.consumeContext(UMB_DOCUMENT_WORKSPACE_CONTEXT, (workspaceContext) => {
-      this.#currentId = workspaceContext.getUnique();
-      this.#documentTypeId = workspaceContext.getContentTypeId();
+      this.#currentId = workspaceContext?.getUnique();
+      this.#documentTypeId = workspaceContext?.getContentTypeUnique();
     });
 
     let editorNode = "";
     this.consumeContext(UMB_PROPERTY_CONTEXT, (propertyContext) => {
-      this.#propertyType = propertyContext.getAlias();
+      this.#propertyType = propertyContext?.getAlias();
       
-      this.observe(propertyContext.value, (value) => {
+      this.observe(propertyContext?.value, (value) => {
         this.#currentValue = value;
         this.handleBlock();
       });
 
-      editorNode = propertyContext.getEditor()?.tagName ?? "";
+      editorNode = propertyContext?.getEditor()?.tagName ?? "";
     });
-        
-    this.consumeContext(UMB_BLOCK_ENTRY_CONTEXT, async (context) => {
-      this.#blockType = editorNode == "UMB-PROPERTY-EDITOR-UI-BLOCK-LIST" ? "list" : "grid";
-      this.#label = context.getLabel();
-      this.#htmlOutput = this.blockBeam();
-      this.requestUpdate();
-      
-      const manager = context._manager;
 
+    
+    this.consumeContext(UMB_BLOCK_MANAGER_CONTEXT, (manager) => {
       this.observe(manager?.variantId, (variantId) => {
         this.#culture = variantId?.culture;
         this.#segment = variantId?.segment;
       });
-      
+    });
+        
+    this.consumeContext(UMB_BLOCK_ENTRY_CONTEXT, async (context) => {
+      this.#blockType = editorNode == "UMB-PROPERTY-EDITOR-UI-BLOCK-LIST" ? "list" : "grid";
+      this.#label = context?.getLabel();
+      this.#htmlOutput = this.blockBeam();
+      this.requestUpdate();
 
-      this.observe(observeMultiple(
-        [
-          context.contentKey,
-          context.contentTypeKey, 
-          context.contentElementTypeKey, 
-          context.settingsElementTypeKey, 
-          context.workspaceEditContentPath,
-          context.workspaceEditSettingsPath,
-          context.contentElementTypeIcon,
-        ]), 
-        (
-          [
-            contentKey,
-            contentTypeKey, 
-            contentElementTypeKey, 
-            settingsKey, 
-            contentEditPath,
-            settingsEditPath,
-            icon
-          ]
-        ) => {
-          
+      this.observe(context?.contentKey, (contentKey) => {
         this.#contentKey = contentKey;
+      });
+
+      this.observe(context?.contentTypeKey, (contentTypeKey) => {
         this.#contentTypeKey = contentTypeKey;
+      });
+
+      this.observe(context?.contentElementTypeKey, (contentElementTypeKey) => {
         this.#contentElementTypeKey = contentElementTypeKey;
-        this.#settingsElementTypeKey = settingsKey;
+      });
+
+      this.observe(context?.settingsElementTypeKey, (settingsElementTypeKey) => {
+        this.#settingsElementTypeKey = settingsElementTypeKey;
+      });
+
+      this.observe(context?.workspaceEditContentPath, (contentEditPath) => {
         this.#contentEditPath = contentEditPath;
+      });
+
+      this.observe(context?.workspaceEditSettingsPath, (settingsEditPath) => {
         this.#settingEditPath = settingsEditPath;
+      });
+
+      this.observe(context?.contentElementTypeIcon, (icon) => {
         this.#icon = icon;
       });
 ;
       // Use a separate array for the promises, await their resolution with Promise.all()
       await this.GetDataTypes();
       
-      context.settingsValues().then(async (settings) => {
+      context?.settingsValues().then(async (settings) => {
         this.observe(settings, async (settings) => {
           this.#currentSettings = settings;
           this.handleBlock();
         });
       });
 
-      context.contentValues().then(async (blockContent) => {
+      context?.contentValues().then(async (blockContent) => {
         this.observe(blockContent, async (content) => {
           this.#currentContent = content;
           this.handleBlock();
@@ -233,12 +230,29 @@ export class InstantBlockPreview extends UmbLitElement {
     else {
 
       const containsRenderGridAreaSlots = data.html.includes("###renderGridAreaSlots");
-      const divStyle = this.#settings.divInlineStyle ? `style="${this.#settings.divInlineStyle}"` : "";
+      
+      // Parse the inline style string into a style object for styleMap
+      const parseInlineStyle = (styleString: string) => {
+        const styles: { [key: string]: string } = {};
+        if (!styleString) return styles;
+        
+        styleString.split(';').forEach(rule => {
+          const [property, value] = rule.split(':').map(s => s.trim());
+          if (property && value) {
+            // Convert kebab-case to camelCase for CSS properties
+            const camelProperty = property.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+            styles[camelProperty] = value;
+          }
+        });
+        return styles;
+      };
+      
+      const divStyles = this.#settings.divInlineStyle ? parseInlineStyle(this.#settings.divInlineStyle) : {};
       if (containsRenderGridAreaSlots) {
         const areaHtml = this.areas();
         data.html = data.html.replace("###renderGridAreaSlots", areaHtml);
         this.#htmlOutput = html`
-            <div class="kibp_defaultDivStyle" ${divStyle}>
+            <div class="kibp_defaultDivStyle" style=${styleMap(divStyles)}>
               <div class="kibp_collaps"><span class="inactive">- &nbsp;&nbsp; Click to minimize</span><span class="active">+ &nbsp;&nbsp; ${this.#label} &nbsp;&nbsp; (Click to maximize)</span></div>
                 <div class="kibp_content">
                 ${unsafeHTML(data.html)}
@@ -248,7 +262,7 @@ export class InstantBlockPreview extends UmbLitElement {
       }
       else {
         this.#htmlOutput = html`
-            <div class="kibp_defaultDivStyle" ${divStyle}>
+            <div class="kibp_defaultDivStyle" style=${styleMap(divStyles)}>
               <div id="kibp_collapsible">
                 <div class="kibp_collaps"><span class="inactive">- &nbsp;&nbsp; Click to minimize</span><span class="active">+ &nbsp;&nbsp; ${this.#label} &nbsp;&nbsp; (Click to maximize)</span></div>
                   <div class="kibp_content">
@@ -325,7 +339,7 @@ export class InstantBlockPreview extends UmbLitElement {
   private blockBeam() {
     
     return html`
-    <umb-ref-grid-block standalone href="${this.#contentEditPath}">
+    <umb-ref-grid-block standalone href="${this.#contentEditPath!}">
       <umb-icon slot="icon" .name=${this.#icon}></umb-icon>
       <umb-ufm-render inline .markdown=${this.#label} .value=${this.#content}></umb-ufm-render>
       ${this.#showLoader ? this.#loader : ''}

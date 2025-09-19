@@ -5,7 +5,7 @@
     "type": "module",
     "scripts": {
         "build": "tsc && vite build",
-        "watch": "node ./build/watch.js ./../../Umbraco wwwroot/app_plugins/knowit-instantblockpreview",
+        "watch": "node ./build/watch.js ./../../Umbraco wwwroot/App_Plugins/knowit-instantblockpreview",
         "init-umbraco": "node build/umbraco.js init-umbraco",
         "test-umbraco": "node build/umbraco.js test-umbraco",
         "remove-umbraco": "node build/umbraco.js remove-umbraco",
@@ -19,7 +19,7 @@
     "devDependencies": {
         "@hey-api/openapi-ts": "^0.52.5",
         "@types/node": "^22.2.0",
-        "@umbraco-cms/backoffice": "^15.0.0-rc1",
+        "@umbraco-cms/backoffice": "^16.2.0",
         "cross-env": "^7.0.3",
         "dotenv": "^16.4.5",
         "eslint": "^9.9.0",
