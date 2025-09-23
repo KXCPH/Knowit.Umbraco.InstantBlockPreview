@@ -1,106 +1,135 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
 using Umbraco.Cms.Core;
+using Umbraco.Cms.Core.Configuration.Models;
 using Umbraco.Cms.Core.Models.Blocks;
 using Umbraco.Cms.Core.Models.PublishedContent;
-using static Microsoft.AspNetCore.Razor.Language.TagHelperMetadata;
+using Umbraco.Cms.Core.PublishedCache;
+using Umbraco.Cms.Core.Services;
 
 namespace Knowit.Umbraco.Bellissima.InstantBlockPreview.Services
 {
     public class BlockHelper : IBlockHelper
     {
-        static readonly ConcurrentDictionary<string, (Type, Type, Type)> controllerToTypes = new();
-        public object BlockInstance(string controllerName, string blockType, object block)
+        private readonly IContentTypeService _contentTypeService;
+        private readonly IPublishedContentTypeFactory _publishedContentTypeFactory;
+        private readonly IPublishedValueFallback _publishedValueFallback;
+        private readonly ModelsBuilderSettings modelsBuilderSettings;
+        public BlockHelper(
+            IContentTypeService contentTypeService,
+            IPublishedContentTypeFactory publishedContentTypeFactory,
+            IPublishedValueFallback publishedValueFallback)
         {
-            var controllerKey = string.Empty;
-            var areas = block is BlockGridItem ? ((BlockGridItem)block).Areas : null;
-            var model = block is BlockGridItem ? ((BlockGridItem)block).Content : ((BlockListItem)block).Content;
-            var settings = block is BlockGridItem ? ((BlockGridItem)block).Settings : ((BlockListItem)block).Settings;
-
-            Type controllerType, blockItemType, blockItemType2, blockElementType, settingsType;
-
-            if (!controllerToTypes.ContainsKey(controllerKey))
-            {
-                controllerType = model!.GetType();
-                settingsType = settings?.GetType();
-
-                // todo, detect settings.
-
-                blockItemType = blockItemType = blockType == PreviewConstants.BlockTypeGrid ? typeof(BlockGridItem<>) : typeof(BlockListItem<>);
-                blockItemType2 = blockType == PreviewConstants.BlockTypeGrid ? typeof(BlockGridItem<,>) : typeof(BlockListItem<,>);
-
-                Type[] typeArray = settingsType != null ? [controllerType, settingsType] : [controllerType];
-
-                try
-                {
-                    blockElementType = blockItemType.MakeGenericType(typeArray);
-                }
-                catch
-                {
-                    blockElementType = blockItemType2.MakeGenericType(typeArray);
-                }
-            }
-            else
-            {
-                // or just load everything from the static dictionary since we've done this all before
-                (controllerType, blockItemType, blockElementType) = controllerToTypes[controllerKey];
-            }
-
-            ConstructorInfo? ctor = blockElementType.GetConstructor(new[]
-                {
-                    typeof(Udi),
-                    controllerType,
-                    typeof(Udi),
-                    settings != null ? settings.GetType() : typeof(IPublishedElement)
-                });
-
-            object blockGridItemInstance = ctor!.Invoke(new object[]
-            {
-                    Udi.Create("element",Guid.NewGuid()),
-                    model!,
-                    Udi.Create("element",Guid.NewGuid()),
-                    settings
-            });
-            if(areas != null)
-            {
-                var blockGridItemInstanceWithAreas = (BlockGridItem)blockGridItemInstance;
-                blockGridItemInstanceWithAreas.Areas = areas;
-                return blockGridItemInstanceWithAreas;
-            }
-            else
-            {
-                return blockGridItemInstance;
-            }
+            _contentTypeService = contentTypeService;
+            _publishedContentTypeFactory = publishedContentTypeFactory;
+            _publishedValueFallback = publishedValueFallback;
+            modelsBuilderSettings = new ModelsBuilderSettings();
         }
 
-        public BlockGridItem DigForBlockGridItem(BlockGridItem model, string target)
+        public IPublishedElement TypedIPublishedElement(string type, string content)
         {
+            var elementtype = _contentTypeService.Get(Guid.Parse(type));
+            var publishedElementType = _publishedContentTypeFactory.CreateContentType(elementtype);
 
-            if (model.ContentUdi.UriValue.ToString() == target) return model;
+            Dictionary<string, object> data = JsonSerializer.Deserialize<Dictionary<string, object>>(content);
+            Dictionary<string, object> deserializedData = ConvertJsonElement(data);
+            IPublishedElement publishedElement = new PublishedElement(publishedElementType, Guid.NewGuid(), deserializedData, true);
 
-            foreach (var area in model.Areas)
+            var elementModelName = elementtype.Alias;
+            elementModelName = char.ToUpper(elementModelName[0]) + elementModelName.Substring(1);
+            var modelsNameSpace = modelsBuilderSettings.ModelsNamespace;
+            var fullTypeName = $"{modelsNameSpace}.{elementModelName}";
+
+            Assembly targetAssembly = AppDomain.CurrentDomain
+                .GetAssemblies()
+                .FirstOrDefault(assembly => assembly.GetTypes().Any(t => t.FullName == fullTypeName));
+
+            Type modelType = targetAssembly.GetType(fullTypeName);
+            object[] constructorArgs = [publishedElement, _publishedValueFallback];
+            object modelInstance = Activator.CreateInstance(modelType, constructorArgs);
+
+            return (IPublishedElement)modelInstance;
+        }
+
+        public IBlockReference<IPublishedElement, IPublishedElement> TypedGenericBlock(IPublishedElement contentModel, IPublishedElement settingsModel, string blockType)
+        {
+            var blockItemType = blockType == PreviewConstants.BlockTypeGrid ? typeof(BlockGridItem<>) : typeof(BlockListItem<>);
+            Type[] typeArray = settingsModel != null ? [contentModel.GetType(), settingsModel.GetType()] : [contentModel.GetType()];
+            Type blockElementType = blockItemType.MakeGenericType(typeArray);
+            ConstructorInfo? ctor = blockElementType.GetConstructor(
+           [
+                typeof(Udi),
+                contentModel.GetType(),
+                typeof(Udi),
+                    settingsModel != null ? settingsModel.GetType() : typeof(IPublishedElement)
+                    ]);
+
+            var blockInstanceItem = ctor!.Invoke(
+            [
+                        Udi.Create("element",Guid.NewGuid()),
+                        contentModel!,
+                        Udi.Create("element",Guid.NewGuid()),
+                        settingsModel
+            ]);
+
+            return (IBlockReference<IPublishedElement, IPublishedElement>)blockInstanceItem;
+        }
+
+        private Dictionary<string, object> ConvertJsonElement(Dictionary<string, object> dictionary)
+        {
+            var result = new Dictionary<string, object?>();
+
+            foreach (var kvp in dictionary)
             {
-                foreach (var content in area)
+                if (kvp.Value is JsonElement element)
                 {
-                    var dig = DigForBlockGridItem(content, target);
-                    if (dig != null) return dig;
+                    result[kvp.Key] = ConvertJsonValue(element);
+                }
+                else if (kvp.Value is Dictionary<string, object?> nestedDict)
+                {
+                    result[kvp.Key] = ConvertJsonElement(nestedDict);
+                }
+                else
+                {
+                    result[kvp.Key] = kvp.Value;
                 }
             }
 
-            return null;
+            return result;
         }
 
-        public BlockListItem DigForBlockListItem(BlockListItem model, string target)
+        // Converts individual JsonElement to its base type
+        private object ConvertJsonValue(JsonElement element)
         {
-            if (model.ContentUdi.UriValue.ToString() == target) return model;
-
-            return null;
+            return element.ValueKind switch
+            {
+                JsonValueKind.Object => element.GetRawText(),
+                JsonValueKind.Array => element.GetRawText(),
+                JsonValueKind.String => element.GetString(),
+                JsonValueKind.Number => element.TryGetInt64(out long l) ? l : (object)element.GetDouble(),
+                JsonValueKind.True => true,
+                JsonValueKind.False => false,
+                JsonValueKind.Null => null,
+                _ => element.GetRawText(),
+            };
         }
+
+        // Handles conversion of JSON arrays
+        private object[] ConvertJsonArray(JsonElement arrayElement)
+        {
+            var result = new List<object?>();
+
+            foreach (var item in arrayElement.EnumerateArray())
+            {
+                result.Add(ConvertJsonValue(item));
+            }
+
+            return result.ToArray();
+        }
+
     }
 }

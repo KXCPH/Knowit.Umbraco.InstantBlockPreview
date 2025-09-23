@@ -6,13 +6,14 @@ without the need to save the document first. This package was heavily inspired b
 
 For Umbraco 13 it also allows for preview of blocks in the Rich Text Editor. (Version 14 support of this is in the works)
 
-**Knowit.Umbraco.InstantBlockPreview currently supports Umbraco 10 to 14**
+**Knowit.Umbraco.InstantBlockPreview currently supports Umbraco 10 to 15.0.0-rc1**
 
 **Knowit.Umbraco.InstantBlockPreview.Headless currently supports Umbraco 12 to 13**
 
 If you use Umbraco 13 or old, use version 1.x.x
 
 If you use Umbraco 14 use version 2.x.x (due to the rewrite of the backoffice)
+If you use Umbraco 15+ use version 3.x.x (due to the rewrite of the blocks in Umbraco)
 
 The two packages "Knowit.Umbraco.InstantBlockPreview" and "Knowit.Umbraco.InstantBlockPreview.Headless" share this repo and readme. 
 
@@ -74,8 +75,8 @@ AreaReplace example:
 </div>
 ```
 
-#### Version 14 specific behavior
-As version 14.1 of Umbraco currently doesn't use the "advanced" tab info from the block setups, and instead lets you override "all" block renderings, I've introduced `enabledFor`and `disableFor` as a way to give that control back. 
+#### Version 14+ specific behavior
+As version 14.1+ of Umbraco currently doesn't use the "advanced" tab info from the block setups, and instead lets you override "all" block renderings, I've introduced `enabledFor`and `disableFor` as a way to give that control back. 
 
 Default behaviour with no configuration is to take control of all block-renderings. If something goes wrong, it will output html like Umbraco normally would without the plugin installed.
 

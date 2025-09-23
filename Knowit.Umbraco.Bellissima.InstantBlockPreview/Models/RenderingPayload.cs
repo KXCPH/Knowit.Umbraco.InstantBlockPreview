@@ -32,13 +32,14 @@ namespace Knowit.Umbraco.Bellissima.InstantBlockPreview.Models
     {
 
         public string Content { get; set; }
+        public string Settings { get; set; }
 
 
         public string ContentId { get; set; }
-
-
+        public string ContentElementTypeKey { get; set; }
+        public string SettingsElementTypeKey { get; set; }
         public string PropertyTypeAlias { get; set; }
-
+        public string BlockType { get; set; }
         public string ContentTypeId { get; set; }
 
     }

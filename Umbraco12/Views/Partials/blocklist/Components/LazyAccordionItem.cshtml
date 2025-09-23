@@ -1,6 +1,0 @@
-﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockListItem<ContentModels.LazyAccordionItem>>;
-@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
-
-
-<div class="ac_title">@Model.Content.Title</div>
-<div class="ac_content @(ViewBag.blockPreview != null ? "visible" : "")">@Model.Content.Paragraph</div>

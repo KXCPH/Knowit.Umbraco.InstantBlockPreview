@@ -1,6 +1,0 @@
-﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockGridItem<ContentModels.ImageBlock>>;
-@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
-
-@if(Model.Content.Image != null) {
-    <img src="@Model.Content.Image.Url()" alt="@Model.Content.AltTag" style="max-width:100%" />
-}

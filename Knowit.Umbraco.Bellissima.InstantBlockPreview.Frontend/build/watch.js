@@ -13,7 +13,7 @@ const __dirname = path.dirname(__filename);
 // Get the folder path and app plugins directory from command-line arguments
 const args = process.argv.slice(2); // Skip the first two default arguments
 const baseFolderPath = path.join(__dirname, args[0]);
-const appPluginsPath = args[1] || 'app_plugins'; // Default to 'app_plugins' if not provided
+const appPluginsPath = args[1] || 'App_Plugins'; // Default to 'App_Plugins' if not provided
 
 // Function to list all folders in a directory
 async function listFolders(directoryPath) {

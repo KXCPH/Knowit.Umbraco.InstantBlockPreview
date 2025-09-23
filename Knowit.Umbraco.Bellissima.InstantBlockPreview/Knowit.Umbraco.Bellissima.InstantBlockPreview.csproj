@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0</TargetFrameworks>
+    <TargetFrameworks>net9.0</TargetFrameworks>
 	  <ContentTargetFolders>.</ContentTargetFolders>
 	  <Product>Knowit.Umbraco.InstantBlockPreview</Product>
 	  <PackageId>Knowit.Umbraco.InstantBlockPreview</PackageId>
 	  <Title>Knowit.Umbraco.InstantBlockPreview</Title>
 	  <Description>Instant block and grid previews in Umbraco without saving your documents</Description>
-	  <PackageTags>umbraco;plugin;package;umbraco-marketplace;knowit;umbraco-14</PackageTags>
+	  <PackageTags>umbraco;plugin;package;umbraco-marketplace;knowit;umbraco-14;umbraco-15;umbraco-16</PackageTags>
 	  <Authors>KasparBoelKjeldsen</Authors>
 	  <Company>Knowit Experience Copenhagen</Company>
 	  <Copyright>Kaspar Boel Kjeldsen</Copyright>
@@ -16,19 +16,17 @@
 	  <RepositoryUrl>https://github.com/kasparboelkjeldsen/Knowit.Umbraco.InstantBlockPreview</RepositoryUrl>
 	  <RepositoryType>git</RepositoryType>
 	  <SignAssembly>False</SignAssembly>
-	  <Version>2.1.8</Version>
+	  <Version>3.0.7</Version>
 	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
 	  <Configurations>Debug;Release;</Configurations>
 	  <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
 
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-		<PackageReference Include="Umbraco.Cms.Core" Version="[14.1.0,15.0.0)" />
-		<PackageReference Include="Umbraco.Cms.Web.Common" Version="[14.1.0,15.0.0)" />
-		<PackageReference Include="Umbraco.Cms.Web.Website" Version="[14.1.0,15.0.0)" />
+	<ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
+		<PackageReference Include="Umbraco.Cms.Core" Version="[15.0.0,17.0.0)" />
+		<PackageReference Include="Umbraco.Cms.Web.Common" Version="[15.0.0,17.0.0)" />
+		<PackageReference Include="Umbraco.Cms.Web.Website" Version="[15.0.0,17.0.0)" />
 	</ItemGroup>
-
 	<ItemGroup>
 		<None Include="buildTransitive\**" Pack="true" PackagePath="buildTransitive" />
 	</ItemGroup>

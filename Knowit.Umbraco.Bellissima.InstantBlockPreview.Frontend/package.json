@@ -5,12 +5,13 @@
     "type": "module",
     "scripts": {
         "build": "tsc && vite build",
-        "watch": "node ./build/watch.js ./../../umbraco wwwroot/app_plugins/knowit-instantblockpreview",
+        "watch": "node ./build/watch.js ./../../Umbraco wwwroot/App_Plugins/knowit-instantblockpreview",
+        "init-umbraco": "node build/umbraco.js init-umbraco",
+        "test-umbraco": "node build/umbraco.js test-umbraco",
+        "remove-umbraco": "node build/umbraco.js remove-umbraco",
+        "usync": "node build/umbraco.js usync",
         "generate": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 openapi-ts --file openapi-ts.config.ts",
-        "init-umbraco": "powershell -File ./../Umbraco/CreateUmbracoProj.ps1 --",
-        "test-umbraco": "powershell -File ./../Umbraco/TestUmbracoProj.ps1 --",
-        "remove-umbraco": "powershell -File ./../Umbraco/RemoveUmbracoProj.ps1 --",
-        "usync": "powershell -File ./../Umbraco/Usync.ps1"
+        "publish": "node build/umbraco.js publish"
     },
     "dependencies": {
         "lit": "^3.1.4"
@@ -18,12 +19,12 @@
     "devDependencies": {
         "@hey-api/openapi-ts": "^0.52.5",
         "@types/node": "^22.2.0",
-        "@umbraco-cms/backoffice": "^14.0.0",
+        "@umbraco-cms/backoffice": "^16.2.0",
         "cross-env": "^7.0.3",
         "dotenv": "^16.4.5",
         "eslint": "^9.9.0",
         "inquirer": "^10.1.8",
         "typescript": "^5.2.2",
         "vite": "^5.3.1"
-  }
+    }
 }
