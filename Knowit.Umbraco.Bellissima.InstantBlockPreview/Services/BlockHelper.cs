@@ -37,7 +37,15 @@ namespace Knowit.Umbraco.Bellissima.InstantBlockPreview.Services
 
             Dictionary<string, object> data = JsonSerializer.Deserialize<Dictionary<string, object>>(content);
             Dictionary<string, object> deserializedData = ConvertJsonElement(data);
-            IPublishedElement publishedElement = new PublishedElement(publishedElementType, Guid.NewGuid(), deserializedData, true);
+
+            IPublishedElement publishedElement = null;
+
+            VariationContext variationContext = new VariationContext();
+#if NET10_0_OR_GREATER
+            publishedElement = new PublishedElement(publishedElementType, Guid.NewGuid(), deserializedData, true, variationContext);
+#else
+            publishedElement = new PublishedElement(publishedElementType, Guid.NewGuid(), deserializedData, true);
+#endif
 
             var elementModelName = elementtype.Alias;
             elementModelName = char.ToUpper(elementModelName[0]) + elementModelName.Substring(1);
