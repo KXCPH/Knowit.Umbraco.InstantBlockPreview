@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbraco-16.2.0", "Umbraco\U
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbraco-16.2.0-nuget", "Umbraco\Umbraco-16.2.0-nuget\Umbraco-16.2.0-nuget.csproj", "{49DA50D7-E327-49BD-9106-95203AF2D505}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbraco-17.0.0-beta", "Umbraco\Umbraco-17.0.0-beta\Umbraco-17.0.0-beta.csproj", "{9B148E88-D53C-4840-A6D5-8C7DE41D00DD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,18 @@ Global
 		{49DA50D7-E327-49BD-9106-95203AF2D505}.Release|x64.Build.0 = Release|Any CPU
 		{49DA50D7-E327-49BD-9106-95203AF2D505}.Release|x86.ActiveCfg = Release|Any CPU
 		{49DA50D7-E327-49BD-9106-95203AF2D505}.Release|x86.Build.0 = Release|Any CPU
+		{9B148E88-D53C-4840-A6D5-8C7DE41D00DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B148E88-D53C-4840-A6D5-8C7DE41D00DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B148E88-D53C-4840-A6D5-8C7DE41D00DD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9B148E88-D53C-4840-A6D5-8C7DE41D00DD}.Debug|x64.Build.0 = Debug|Any CPU
+		{9B148E88-D53C-4840-A6D5-8C7DE41D00DD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9B148E88-D53C-4840-A6D5-8C7DE41D00DD}.Debug|x86.Build.0 = Debug|Any CPU
+		{9B148E88-D53C-4840-A6D5-8C7DE41D00DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B148E88-D53C-4840-A6D5-8C7DE41D00DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B148E88-D53C-4840-A6D5-8C7DE41D00DD}.Release|x64.ActiveCfg = Release|Any CPU
+		{9B148E88-D53C-4840-A6D5-8C7DE41D00DD}.Release|x64.Build.0 = Release|Any CPU
+		{9B148E88-D53C-4840-A6D5-8C7DE41D00DD}.Release|x86.ActiveCfg = Release|Any CPU
+		{9B148E88-D53C-4840-A6D5-8C7DE41D00DD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -106,6 +120,7 @@ Global
 		{8BB5BCDD-ED7F-4857-80B4-D92DEFB80605} = {1C25C5B3-E5AC-4D3A-B22B-429614D63E37}
 		{8B004286-E4CF-4241-B71E-8E63DCA346CD} = {1C25C5B3-E5AC-4D3A-B22B-429614D63E37}
 		{49DA50D7-E327-49BD-9106-95203AF2D505} = {1C25C5B3-E5AC-4D3A-B22B-429614D63E37}
+		{9B148E88-D53C-4840-A6D5-8C7DE41D00DD} = {1C25C5B3-E5AC-4D3A-B22B-429614D63E37}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9CCC26E6-1E21-4E0C-B5F5-A803BE335338}
