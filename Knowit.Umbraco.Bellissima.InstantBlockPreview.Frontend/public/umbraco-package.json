@@ -3,7 +3,7 @@
     "id": "knowit-instantblockpreview",
     "name": "knowit-instantblockpreview",
     "allowPackageTelemetry": true,
-    "version": "3.0.3",
+    "version": "3.0.8",
     "extensions": [
         {
           "name": "knowit-instantblockpreview EntryPoint",

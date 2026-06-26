@@ -18,16 +18,17 @@ namespace Knowit.Umbraco.Bellissima.InstantBlockPreview.Services
         private readonly IContentTypeService _contentTypeService;
         private readonly IPublishedContentTypeFactory _publishedContentTypeFactory;
         private readonly IPublishedValueFallback _publishedValueFallback;
-        private readonly ModelsBuilderSettings modelsBuilderSettings;
+        private readonly IPublishedModelFactory _publishedModelFactory;
         public BlockHelper(
             IContentTypeService contentTypeService,
             IPublishedContentTypeFactory publishedContentTypeFactory,
-            IPublishedValueFallback publishedValueFallback)
+            IPublishedValueFallback publishedValueFallback,
+            IPublishedModelFactory publishedModelFactory)
         {
             _contentTypeService = contentTypeService;
             _publishedContentTypeFactory = publishedContentTypeFactory;
             _publishedValueFallback = publishedValueFallback;
-            modelsBuilderSettings = new ModelsBuilderSettings();
+            _publishedModelFactory = publishedModelFactory;
         }
 
         public IPublishedElement TypedIPublishedElement(string type, string content)
@@ -47,20 +48,14 @@ namespace Knowit.Umbraco.Bellissima.InstantBlockPreview.Services
             publishedElement = new PublishedElement(publishedElementType, Guid.NewGuid(), deserializedData, true);
 #endif
 
-            var elementModelName = elementtype.Alias;
-            elementModelName = char.ToUpper(elementModelName[0]) + elementModelName.Substring(1);
-            var modelsNameSpace = modelsBuilderSettings.ModelsNamespace;
-            var fullTypeName = $"{modelsNameSpace}.{elementModelName}";
-
-            Assembly targetAssembly = AppDomain.CurrentDomain
-                .GetAssemblies()
-                .FirstOrDefault(assembly => assembly.GetTypes().Any(t => t.FullName == fullTypeName));
-
-            Type modelType = targetAssembly.GetType(fullTypeName);
-            object[] constructorArgs = [publishedElement, _publishedValueFallback];
-            object modelInstance = Activator.CreateInstance(modelType, constructorArgs);
-
-            return (IPublishedElement)modelInstance;
+            // Wrap the raw element in its strongly-typed ModelsBuilder model using Umbraco's own
+            // model factory. This is the exact same mechanism the runtime-compiled Razor views use,
+            // so the produced model type always matches what the view expects. Resolving the model
+            // type ourselves via reflection over AppDomain assemblies is fragile under the
+            // InMemoryAuto ModelsBuilder mode, where the generated assembly is produced lazily and
+            // regenerated (new version) on every content-type change - leading to either a
+            // ModelBindingException (stale version) or a null type (not generated yet).
+            return _publishedModelFactory.CreateModel(publishedElement);
         }
 
         public IBlockReference<IPublishedElement, IPublishedElement> TypedGenericBlock(IPublishedElement contentModel, IPublishedElement settingsModel, string blockType)
