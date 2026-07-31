@@ -140,9 +140,9 @@ export class InstantBlockPreview extends UmbLitElement {
     const content = this.#currentContent;
     const settings = this.#currentSettings;
 
-    const marriedContent = marryContentAndValue(content, this.#currentValue.contentData.find((x: { key: string | undefined; }) => x.key === this.#contentKey).values, this.#culture, this.#segment);
+    const marriedContent = marryContentAndValue(content, this.#currentValue.contentData.find((x: { key: string | undefined; }) => x.key === this.#contentKey)?.values ?? [], this.#culture, this.#segment);
 
-    const marriedSettings = settings ? marryContentAndValue(content, this.#currentValue.settingsData.find((x: { key: string | undefined; }) => x.key === this.#contentKey).values, this.#culture, this.#segment) : settings;
+    const marriedSettings = settings ? marryContentAndValue(content, this.#currentValue.settingsData.find((x: { key: string | undefined; }) => x.key === this.#contentKey)?.values ?? [], this.#culture, this.#segment) : settings;
 
     const goodContent = parseBadKeys(marriedContent, InstantBlockPreview.typeDefinitions);
     const goodSettings = settings ? parseBadKeys(marriedSettings, InstantBlockPreview.typeDefinitions) : settings;

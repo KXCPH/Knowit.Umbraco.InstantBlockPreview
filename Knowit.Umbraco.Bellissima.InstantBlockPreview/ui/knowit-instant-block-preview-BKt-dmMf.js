@@ -2,7 +2,7 @@ import { html as N, styleMap as z, unsafeHTML as V, css as se, customElement as 
 import { UMB_PROPERTY_CONTEXT as ie } from "@umbraco-cms/backoffice/property";
 import { UMB_DOCUMENT_WORKSPACE_CONTEXT as oe } from "@umbraco-cms/backoffice/document";
 import { debounce as ne } from "@umbraco-cms/backoffice/utils";
-import { O as o } from "./index-Dku9YWOy.js";
+import { O as o } from "./index-CMrSMknS.js";
 import "@umbraco-cms/backoffice/ufm";
 import { UMB_BLOCK_MANAGER_CONTEXT as ce, UMB_BLOCK_ENTRY_CONTEXT as de } from "@umbraco-cms/backoffice/block";
 import { UmbLitElement as ue } from "@umbraco-cms/backoffice/lit-element";
@@ -68,7 +68,7 @@ class pe {
     return this._isCancelled;
   }
 }
-const D = (r) => typeof r == "string", $ = (r) => D(r) && r !== "", W = (r) => r instanceof Blob, Z = (r) => r instanceof FormData, le = (r) => {
+const R = (r) => typeof r == "string", $ = (r) => R(r) && r !== "", W = (r) => r instanceof Blob, Z = (r) => r instanceof FormData, le = (r) => {
   try {
     return btoa(r);
   } catch {
@@ -90,7 +90,7 @@ const D = (r) => typeof r == "string", $ = (r) => D(r) && r !== "", W = (r) => r
 }, Te = (r) => {
   if (r.formData) {
     const e = new FormData(), t = (a, s) => {
-      D(s) || W(s) ? e.append(a, s) : e.append(a, JSON.stringify(s));
+      R(s) || W(s) ? e.append(a, s) : e.append(a, JSON.stringify(s));
     };
     return Object.entries(r.formData).filter(([, a]) => a != null).forEach(([a, s]) => {
       Array.isArray(s) ? s.forEach((i) => t(a, i)) : t(a, s);
@@ -110,34 +110,34 @@ const D = (r) => typeof r == "string", $ = (r) => D(r) && r !== "", W = (r) => r
     Accept: "application/json",
     ...i,
     ...e.headers
-  }).filter(([, u]) => u != null).reduce((u, [l, m]) => ({
+  }).filter(([, u]) => u != null).reduce((u, [m, l]) => ({
     ...u,
-    [l]: String(m)
+    [m]: String(l)
   }), {});
   if ($(t) && (d.Authorization = `Bearer ${t}`), $(a) && $(s)) {
     const u = le(`${a}:${s}`);
     d.Authorization = `Basic ${u}`;
   }
-  return e.body !== void 0 && (e.mediaType ? d["Content-Type"] = e.mediaType : W(e.body) ? d["Content-Type"] = e.body.type || "application/octet-stream" : D(e.body) ? d["Content-Type"] = "text/plain" : Z(e.body) || (d["Content-Type"] = "application/json")), new Headers(d);
+  return e.body !== void 0 && (e.mediaType ? d["Content-Type"] = e.mediaType : W(e.body) ? d["Content-Type"] = e.body.type || "application/octet-stream" : R(e.body) ? d["Content-Type"] = "text/plain" : Z(e.body) || (d["Content-Type"] = "application/json")), new Headers(d);
 }, fe = (r) => {
   var e, t;
   if (r.body !== void 0)
-    return (e = r.mediaType) != null && e.includes("application/json") || (t = r.mediaType) != null && t.includes("+json") ? JSON.stringify(r.body) : D(r.body) || W(r.body) || Z(r.body) ? r.body : JSON.stringify(r.body);
+    return (e = r.mediaType) != null && e.includes("application/json") || (t = r.mediaType) != null && t.includes("+json") ? JSON.stringify(r.body) : R(r.body) || W(r.body) || Z(r.body) ? r.body : JSON.stringify(r.body);
 }, ve = async (r, e, t, a, s, i, d) => {
   const u = new AbortController();
-  let l = {
+  let m = {
     headers: i,
     body: a ?? s,
     method: e.method,
     signal: u.signal
   };
-  for (const m of r.interceptors.request._fns)
-    l = await m(l);
-  return d(() => u.abort()), await fetch(t, l);
+  for (const l of r.interceptors.request._fns)
+    m = await l(m);
+  return d(() => u.abort()), await fetch(t, m);
 }, ge = (r, e) => {
   if (e) {
     const t = r.headers.get(e);
-    if (D(t))
+    if (R(t))
       return t;
   }
 }, ke = async (r) => {
@@ -220,19 +220,19 @@ const D = (r) => typeof r == "string", $ = (r) => D(r) && r !== "", W = (r) => r
   }
 }, n = (r, e) => new pe(async (t, a, s) => {
   try {
-    const i = ye(r, e), d = Te(e), u = fe(e), l = await be(r, e);
+    const i = ye(r, e), d = Te(e), u = fe(e), m = await be(r, e);
     if (!s.isCancelled) {
-      let m = await ve(r, e, i, u, d, l, s);
+      let l = await ve(r, e, i, u, d, m, s);
       for (const re of r.interceptors.response._fns)
-        m = await re(m);
-      const R = await ke(m), te = ge(m, e.responseHeader);
-      let K = R;
-      e.responseTransformer && m.ok && (K = await e.responseTransformer(R));
+        l = await re(l);
+      const b = await ke(l), te = ge(l, e.responseHeader);
+      let K = b;
+      e.responseTransformer && l.ok && (K = await e.responseTransformer(b));
       const J = {
         url: i,
-        ok: m.ok,
-        status: m.status,
-        statusText: m.statusText,
+        ok: l.ok,
+        status: l.status,
+        statusText: l.statusText,
         body: te ?? K
       };
       qe(e, J), t(J.body);
@@ -1216,9 +1216,9 @@ function Q(r, e) {
 `);
           break;
         case "Umbraco.MultiNodeTreePicker":
-          for (let l = 0; l < t[s].length; l++) {
-            const m = `umb://${t[s][l].type}/${t[s][l].unique}`;
-            t[s][l] = m;
+          for (let m = 0; m < t[s].length; m++) {
+            const l = `umb://${t[s][m].type}/${t[s][m].unique}`;
+            t[s][m] = l;
           }
           t[s] = t[s].join(",");
           break;
@@ -1232,30 +1232,30 @@ var Ee = Object.defineProperty, we = Object.getOwnPropertyDescriptor, x = (r) =>
   for (var s = a > 1 ? void 0 : a ? we(e, t) : e, i = r.length - 1, d; i >= 0; i--)
     (d = r[i]) && (s = (a ? d(e, t, s) : d(s)) || s);
   return a && s && Ee(e, t, s), s;
-}, ee = (r, e, t) => e.has(r) || x("Cannot " + t), c = (r, e, t) => (ee(r, e, "read from private field"), t ? t.call(r) : e.get(r)), p = (r, e, t) => e.has(r) ? x("Cannot add the same private member more than once") : e instanceof WeakSet ? e.add(r) : e.set(r, t), h = (r, e, t, a) => (ee(r, e, "write to private field"), e.set(r, t), t), O, v, I, k, q, U, P, A, C, _, F, f, j, M, G, g, b, H, L, B, T, E, w;
+}, ee = (r, e, t) => e.has(r) || x("Cannot " + t), c = (r, e, t) => (ee(r, e, "read from private field"), t ? t.call(r) : e.get(r)), p = (r, e, t) => e.has(r) ? x("Cannot add the same private member more than once") : e instanceof WeakSet ? e.add(r) : e.set(r, t), h = (r, e, t, a) => (ee(r, e, "write to private field"), e.set(r, t), t), O, g, I, q, _, U, P, A, C, B, F, v, j, M, G, k, f, H, L, E, T, w, D;
 let y = class extends ue {
   constructor() {
-    super(), p(this, O), p(this, v), p(this, I), p(this, k), p(this, q), p(this, U), p(this, P), p(this, A), p(this, C), p(this, _), p(this, F), p(this, f), p(this, j), p(this, M), p(this, G, "Loading preview..."), p(this, g, !1), p(this, b), p(this, H), p(this, L), p(this, B), p(this, T), p(this, E), p(this, w), h(this, T, /* @__PURE__ */ new Map()), h(this, b, this.blockBeam()), this.init();
+    super(), p(this, O), p(this, g), p(this, I), p(this, q), p(this, _), p(this, U), p(this, P), p(this, A), p(this, C), p(this, B), p(this, F), p(this, v), p(this, j), p(this, M), p(this, G, "Loading preview..."), p(this, k, !1), p(this, f), p(this, H), p(this, L), p(this, E), p(this, T), p(this, w), p(this, D), h(this, T, /* @__PURE__ */ new Map()), h(this, f, this.blockBeam()), this.init();
   }
   async init() {
-    h(this, v, await fetch("/api/blockpreview")), this.consumeContext(oe, (e) => {
+    h(this, g, await fetch("/api/blockpreview")), this.consumeContext(oe, (e) => {
       h(this, P, e == null ? void 0 : e.getUnique()), h(this, A, e == null ? void 0 : e.getContentTypeUnique());
     });
     let r = "";
     this.consumeContext(ie, (e) => {
       var t;
       h(this, O, e == null ? void 0 : e.getAlias()), this.observe(e == null ? void 0 : e.value, (a) => {
-        h(this, q, a), this.handleBlock();
+        h(this, _, a), this.handleBlock();
       }), r = ((t = e == null ? void 0 : e.getEditor()) == null ? void 0 : t.tagName) ?? "";
     }), this.consumeContext(ce, (e) => {
       this.observe(e == null ? void 0 : e.variantId, (t) => {
-        h(this, E, t == null ? void 0 : t.culture), h(this, w, t == null ? void 0 : t.segment);
+        h(this, w, t == null ? void 0 : t.culture), h(this, D, t == null ? void 0 : t.segment);
       });
     }), this.consumeContext(de, async (e) => {
-      h(this, U, r == "UMB-PROPERTY-EDITOR-UI-BLOCK-LIST" ? "list" : "grid"), h(this, f, e == null ? void 0 : e.getLabel()), h(this, b, this.blockBeam()), this.requestUpdate(), this.observe(e == null ? void 0 : e.contentKey, (t) => {
-        h(this, _, t);
-      }), this.observe(e == null ? void 0 : e.contentTypeKey, (t) => {
+      h(this, U, r == "UMB-PROPERTY-EDITOR-UI-BLOCK-LIST" ? "list" : "grid"), h(this, v, e == null ? void 0 : e.getLabel()), h(this, f, this.blockBeam()), this.requestUpdate(), this.observe(e == null ? void 0 : e.contentKey, (t) => {
         h(this, B, t);
+      }), this.observe(e == null ? void 0 : e.contentTypeKey, (t) => {
+        h(this, E, t);
       }), this.observe(e == null ? void 0 : e.contentElementTypeKey, (t) => {
         h(this, C, t);
       }), this.observe(e == null ? void 0 : e.settingsElementTypeKey, (t) => {
@@ -1272,15 +1272,16 @@ let y = class extends ue {
         });
       }), e == null || e.contentValues().then(async (t) => {
         this.observe(t, async (a) => {
-          h(this, k, a), this.handleBlock();
+          h(this, q, a), this.handleBlock();
         });
       });
     });
   }
   async handleBlock() {
-    if (h(this, g, !0), c(this, k) == null)
+    var m, l;
+    if (h(this, k, !0), c(this, q) == null)
       return;
-    const r = c(this, k), e = c(this, I), t = Y(r, c(this, q).contentData.find((l) => l.key === c(this, _)).values, c(this, E), c(this, w)), a = e && Y(r, c(this, q).settingsData.find((l) => l.key === c(this, _)).values, c(this, E), c(this, w)), s = Q(t, y.typeDefinitions), i = e && Q(a, y.typeDefinitions), d = {
+    const r = c(this, q), e = c(this, I), t = Y(r, ((m = c(this, _).contentData.find((b) => b.key === c(this, B))) == null ? void 0 : m.values) ?? [], c(this, w), c(this, D)), a = e && Y(r, ((l = c(this, _).settingsData.find((b) => b.key === c(this, B))) == null ? void 0 : l.values) ?? [], c(this, w), c(this, D)), s = Q(t, y.typeDefinitions), i = e && Q(a, y.typeDefinitions), d = {
       content: JSON.stringify(s),
       settings: JSON.stringify(i),
       contentId: c(this, P),
@@ -1312,40 +1313,40 @@ let y = class extends ue {
       var a, s;
       this.manageScripts();
       const e = (a = this.shadowRoot) == null ? void 0 : a.querySelector(".kibp_collaps"), t = (s = this.shadowRoot) == null ? void 0 : s.querySelector(".kibp_content");
-      c(this, v).collapsibleBlocks ? e == null || e.addEventListener("click", (i) => {
+      c(this, g).collapsibleBlocks ? e == null || e.addEventListener("click", (i) => {
         e.classList.toggle("active"), t == null || t.classList.toggle("hidden"), i.preventDefault(), i.stopImmediatePropagation();
       }) : (e == null || e.classList.remove("kibp_collaps"), e == null || e.remove());
     }, 100)();
   }
   buildHtml(r) {
-    if (h(this, g, !1), r.html === "blockbeam")
-      h(this, b, this.blockBeam());
+    if (h(this, k, !1), r.html === "blockbeam")
+      h(this, f, this.blockBeam());
     else {
       const e = r.html.includes("###renderGridAreaSlots"), t = (s) => {
         const i = {};
         return s && s.split(";").forEach((d) => {
-          const [u, l] = d.split(":").map((m) => m.trim());
-          if (u && l) {
-            const m = u.replace(/-([a-z])/g, (R) => R[1].toUpperCase());
-            i[m] = l;
+          const [u, m] = d.split(":").map((l) => l.trim());
+          if (u && m) {
+            const l = u.replace(/-([a-z])/g, (b) => b[1].toUpperCase());
+            i[l] = m;
           }
         }), i;
-      }, a = c(this, v).divInlineStyle ? t(c(this, v).divInlineStyle) : {};
+      }, a = c(this, g).divInlineStyle ? t(c(this, g).divInlineStyle) : {};
       if (e) {
         const s = this.areas();
-        r.html = r.html.replace("###renderGridAreaSlots", s), h(this, b, N`
+        r.html = r.html.replace("###renderGridAreaSlots", s), h(this, f, N`
             <div class="kibp_defaultDivStyle" style=${z(a)}>
-              <div class="kibp_collaps"><span class="inactive">- &nbsp;&nbsp; Click to minimize</span><span class="active">+ &nbsp;&nbsp; ${c(this, f)} &nbsp;&nbsp; (Click to maximize)</span></div>
+              <div class="kibp_collaps"><span class="inactive">- &nbsp;&nbsp; Click to minimize</span><span class="active">+ &nbsp;&nbsp; ${c(this, v)} &nbsp;&nbsp; (Click to maximize)</span></div>
                 <div class="kibp_content">
                 ${V(r.html)}
                 </div>
               </div>
             </div>`);
       } else
-        h(this, b, N`
+        h(this, f, N`
             <div class="kibp_defaultDivStyle" style=${z(a)}>
               <div id="kibp_collapsible">
-                <div class="kibp_collaps"><span class="inactive">- &nbsp;&nbsp; Click to minimize</span><span class="active">+ &nbsp;&nbsp; ${c(this, f)} &nbsp;&nbsp; (Click to maximize)</span></div>
+                <div class="kibp_collaps"><span class="inactive">- &nbsp;&nbsp; Click to minimize</span><span class="active">+ &nbsp;&nbsp; ${c(this, v)} &nbsp;&nbsp; (Click to maximize)</span></div>
                   <div class="kibp_content">
                     ${V(r.html)}
                   </div>
@@ -1355,7 +1356,7 @@ let y = class extends ue {
     }
   }
   async GetDataTypes() {
-    const e = (await Be.getDocumentTypeById({ id: c(this, B) })).properties.map(async (t) => {
+    const e = (await Be.getDocumentTypeById({ id: c(this, E) })).properties.map(async (t) => {
       const a = t.dataType.id;
       let s = y.typeKeys.find((i) => {
         var d;
@@ -1363,7 +1364,7 @@ let y = class extends ue {
       });
       if (!s) {
         const i = await _e.getDataTypeById({ id: a });
-        s = i.editorAlias, y.typeKeys.push(c(this, B)), y.typeDefinitions[t.alias] = i;
+        s = i.editorAlias, y.typeKeys.push(c(this, E)), y.typeDefinitions[t.alias] = i;
       }
       return s;
     });
@@ -1383,7 +1384,7 @@ let y = class extends ue {
   areas() {
     return `
       <umb-ref-grid-block standalone href="${c(this, M)}">
-        <span style="margin-right: 20px">${c(this, f)}</span> ${c(this, g) ? c(this, G) : ""}
+        <span style="margin-right: 20px">${c(this, v)}</span> ${c(this, k) ? c(this, G) : ""}
         <umb-block-grid-areas-container slot="areas"></umb-block-grid-areas-container>
       </umb-ref-grid-block>
       `;
@@ -1392,37 +1393,37 @@ let y = class extends ue {
     return N`
     <umb-ref-grid-block standalone href="${c(this, j)}">
       <umb-icon slot="icon" .name=${c(this, H)}></umb-icon>
-      <umb-ufm-render inline .markdown=${c(this, f)} .value=${c(this, L)}></umb-ufm-render>
-      ${c(this, g) ? c(this, G) : ""}
+      <umb-ufm-render inline .markdown=${c(this, v)} .value=${c(this, L)}></umb-ufm-render>
+      ${c(this, k) ? c(this, G) : ""}
 		</umb-ref-grid-block>`;
   }
   render() {
-    return N`${c(this, b)}`;
+    return N`${c(this, f)}`;
   }
 };
 O = /* @__PURE__ */ new WeakMap();
-v = /* @__PURE__ */ new WeakMap();
+g = /* @__PURE__ */ new WeakMap();
 I = /* @__PURE__ */ new WeakMap();
-k = /* @__PURE__ */ new WeakMap();
 q = /* @__PURE__ */ new WeakMap();
+_ = /* @__PURE__ */ new WeakMap();
 U = /* @__PURE__ */ new WeakMap();
 P = /* @__PURE__ */ new WeakMap();
 A = /* @__PURE__ */ new WeakMap();
 C = /* @__PURE__ */ new WeakMap();
-_ = /* @__PURE__ */ new WeakMap();
+B = /* @__PURE__ */ new WeakMap();
 F = /* @__PURE__ */ new WeakMap();
-f = /* @__PURE__ */ new WeakMap();
+v = /* @__PURE__ */ new WeakMap();
 j = /* @__PURE__ */ new WeakMap();
 M = /* @__PURE__ */ new WeakMap();
 G = /* @__PURE__ */ new WeakMap();
-g = /* @__PURE__ */ new WeakMap();
-b = /* @__PURE__ */ new WeakMap();
+k = /* @__PURE__ */ new WeakMap();
+f = /* @__PURE__ */ new WeakMap();
 H = /* @__PURE__ */ new WeakMap();
 L = /* @__PURE__ */ new WeakMap();
-B = /* @__PURE__ */ new WeakMap();
-T = /* @__PURE__ */ new WeakMap();
 E = /* @__PURE__ */ new WeakMap();
+T = /* @__PURE__ */ new WeakMap();
 w = /* @__PURE__ */ new WeakMap();
+D = /* @__PURE__ */ new WeakMap();
 y.typeKeys = [];
 y.typeDefinitions = {};
 y.styles = se`
@@ -1488,4 +1489,4 @@ export {
   y as InstantBlockPreview,
   Ce as default
 };
-//# sourceMappingURL=knowit-instant-block-preview-D1k6F-Dm.js.map
+//# sourceMappingURL=knowit-instant-block-preview-BKt-dmMf.js.map
